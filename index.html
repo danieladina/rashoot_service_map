@@ -410,6 +410,7 @@ footer.printfoot{display:none;}
       <div class="brand-name">מסייע מלווה רשותי</div>
     </div>
     <a class="pill" href="https://online.fliphtml5.com/xwokm/dhpk/#p=4" target="_blank" rel="noopener">ערכה למלווה</a>
+    <button class="pill" id="btnDeliv">תוצרי חובה</button>
   </div>
   <div class="topbar-actions">
     <a class="pill pill-form-highlight" href="https://wkf.ms/3SBuWLz" target="_blank" rel="noopener">✍️ טופס הזמנת מענים</a>
@@ -548,6 +549,55 @@ function openExamsDialog(){
   document.body.appendChild(ov);
 }
 document.addEventListener('click', e=>{ if(e.target.closest && e.target.closest('#btnExams')) openExamsDialog(); });
+const DELIVERABLES = [
+  {t:'תוכנית עבודה שנתית ושתי תחנות בקרה', inc:'מטרות, יעדים כמותיים, פעולות, אחריות, משאבים, מועדים ומנגנוני מעקב. מנהל אגף החינוך וועדת ההיגוי מאשרים את התוכנית. בכל תחנת בקרה נבחנים תכנון מול ביצוע ונרשמות החלטות להמשך, אחראים ומועדים', when:'תוכנית בנובמבר–דצמבר, בקרה בפברואר וביוני', who:'המוביל, באישור מנהל אגף החינוך וועדת ההיגוי'},
+  {t:'מיפוי נתונים פעמיים בשנה', inc:'מיפוי מצרפי לפי הגדרות התוכנית, באחריות המוביל הרשותי ועם הגורמים המוסמכים', when:'נובמבר ויוני', who:'המוביל, עם הגורמים המוסמכים'},
+  {t:'מודל רשותי לקידום בגרוטק', inc:'התפיסה, העקרונות, המהלכים והתוצאות שהתגבשו לאורך השנה', when:'אמצע יוני, בתחילת שלב הבקרה, הלמידה והשיפור', who:'המוביל ומנהל אגף החינוך'},
+  {t:'תשתית לתוכנית עבודה לשנה העוקבת', inc:'כיווני העבודה וההחלטות על המשך או שינוי, עם השותפים, כוח האדם, המשאבים והמועדים הנחוצים להכנת התוכנית הבאה', when:'עוגנים באמצע יוני והמשך הכנה עד אוגוסט', who:'המוביל, עם בעלי התפקידים'},
+  {t:'סיכום מפגש עם ראש הרשות, מנהל אגף החינוך, המוביל הרשותי, מנהל התוכנית והמלווה הרשותי', inc:'עיקרי הדיון על ההתקדמות ועל הסוגיות המרכזיות, ההחלטות שהתקבלו, האחראים והמועדים', when:'במהלך השנה, במועד שייקבע', who:'המוביל'},
+  {t:'סיכום בימת שיתוף של מנהלי בתי הספר עם מנהל אגף החינוך, המוביל הרשותי והמלווה הרשותי', inc:'עיקרי השיתוף והלמידה, ההחלטות להמשך, האחראים והמועדים', when:'במהלך השנה, במועד שייקבע', who:'המוביל'}
+];
+function openDelivDialog(){
+  const ov = document.createElement('div');
+  ov.className = 'sheet-overlay';
+  const card = (d,i) => `<details style="background:#fff;border-radius:12px;box-shadow:0 2px 10px rgba(20,22,52,.08);">
+      <summary style="cursor:pointer;list-style:none;display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;padding:14px 16px;align-items:start;">
+        <span style="grid-row:span 2;width:30px;height:30px;border-radius:999px;background:#FF46E0;color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:14px;">${i+1}</span>
+        <span style="font-weight:800;font-size:15px;line-height:1.35;text-wrap:pretty;">${d.t}</span>
+        <span style="font-size:13px;color:var(--slate);">${d.when}</span>
+      </summary>
+      <div style="padding:0 58px 16px 16px;display:grid;gap:10px;font-size:13.5px;line-height:1.6;">
+        <div><div style="font-weight:700;font-size:12px;color:var(--slate);">מה נכלל</div><div style="text-wrap:pretty;">${d.inc}</div></div>
+        <div><div style="font-weight:700;font-size:12px;color:var(--slate);">מי מרכז את ההכנה</div><div>${d.who}</div></div>
+      </div>
+    </details>`;
+  ov.innerHTML = `
+    <div class="sheet-box" role="dialog" aria-modal="true" style="max-width:720px;">
+      <div class="sheet-head">
+        <span class="sheet-title" style="display:flex;align-items:center;gap:8px;">ששת תוצרי החובה <button class="deliv-help" aria-label="עזרה" style="width:26px;height:26px;border-radius:999px;border:1.5px solid #FF46E0;background:#fff;color:#C81FB0;font-weight:800;font-size:14px;cursor:pointer;font-family:inherit;line-height:1;">?</button><button class="deliv-q" aria-label="שאלה לסוף השנה" style="width:26px;height:26px;border-radius:999px;border:1.5px solid #FF46E0;background:#fff;color:#C81FB0;font-weight:800;font-size:14px;cursor:pointer;font-family:inherit;line-height:1;">!</button></span>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <a class="pill pill-form-highlight" href="https://innotechedu.monday.com/boards/18431490325" target="_blank" rel="noopener">עדכון מצב במנדיי</a>
+          <button class="sheet-close" aria-label="סגור">✕</button>
+        </div>
+      </div>
+      <div class="sheet-body" style="display:grid;gap:10px;">
+        <div class="deliv-help-box" hidden style="padding:12px 14px;background:#fff;border:1.5px solid #FF46E0;border-radius:10px;font-size:13.5px;line-height:1.65;text-wrap:pretty;">מעקב אחר התוצרים לפי לוח 8.6.3. מפת השותפים, הסכמות העבודה, תוכנית החניכה, טבלת המענים, לוח שגרות הניהול ודיווחי הסטטוס הם רישומי עבודה התומכים בתוצרים. בעמודה "מי מכין השנה" ניכרת היכולת שנבנית ברשות: תוצר שהמוביל מכין בעצמו הוא סימן לעצמאות רשותית.</div>
+        <div class="deliv-q-box" hidden style="padding:12px 14px;background:#fff;border:1.5px solid #FF46E0;border-radius:10px;font-size:13.5px;line-height:1.65;text-wrap:pretty;">שאלה לסוף השנה: איזה תוצר קיים רק כי המלווה הכין אותו? מה צריך לקרות כדי שבשנה הבאה המוביל יכין את התוצר והמלווה רק יעיר עליו? (סעיף 10.4)</div>
+        <p style="margin:0;padding:10px 14px;background:#FFF3B0;border-radius:10px;font-size:13.5px;font-weight:700;color:#5A4500;">חובה לעדכן מצב ומי מכין השנה, לכל תוצר בלוח המנדיי.</p>
+        ${DELIVERABLES.map(card).join('')}</div>
+    </div>`;
+  const close = ()=>{ ov.remove(); document.removeEventListener('keydown', onKey); };
+  const onKey = ev=>{ if(ev.key==='Escape') close(); };
+  ov.addEventListener('click', ev=>{ if(ev.target===ov) close(); });
+  ov.querySelector('.sheet-close').addEventListener('click', close);
+  const hb = ov.querySelector('.deliv-help');
+  if(hb) hb.addEventListener('click', ()=>{ const b = ov.querySelector('.deliv-help-box'); b.hidden = !b.hidden; });
+  const qb = ov.querySelector('.deliv-q');
+  if(qb) qb.addEventListener('click', ()=>{ const b = ov.querySelector('.deliv-q-box'); b.hidden = !b.hidden; });
+  document.addEventListener('keydown', onKey);
+  document.body.appendChild(ov);
+}
+document.addEventListener('click', e=>{ if(e.target.closest && e.target.closest('#btnDeliv')) openDelivDialog(); });
 
 function infoLinkHtml(id){
   if(INFO_SHEETS[id]){
