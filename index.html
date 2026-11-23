@@ -421,12 +421,10 @@ footer.printfoot{display:none;}
   </div>
   <div class="topbar-actions">
     <a class="pill pill-form-highlight" href="https://wkf.ms/3SBuWLz" target="_blank" rel="noopener">✍️ טופס הזמנת מענים</a>
+    <a class="pill pill-form-highlight" href="https://forms.monday.com/forms/66cf4a9d2bc3f610007528360e637010?r=use1" target="_blank" rel="noopener">📓 יומן ליווי</a>
     <button class="pill" id="btnExams">לוח מועדים</button>
     <a class="pill pill-link" href="https://innotechedu.monday.com/overviews/37584966" target="_blank" rel="noopener">סטטוס הזמנות</a>
     <a class="pill pill-link" href="https://innotechedu.monday.com/boards/18431490325/views/291031624" target="_blank" rel="noopener">פרטי רשויות</a>
-    <input type="file" id="importFileInput" accept="application/json" style="display:none;">
-    <button class="pill" id="btnImport" title="שחזור מקובץ גיבוי">ייבוא גיבוי</button>
-    <button class="pill" id="btnExport" title="שמירת כל הנתונים לקובץ">ייצוא גיבוי</button>
     <button class="pill" id="btnHome">הרשויות שלי</button>
   </div>
 </div>
@@ -734,8 +732,6 @@ const ENTITLEMENT_ITEMS = [
   {id:'bootcamp_regular',      key:'bootcamp'},
   {id:'tech_track',            key:'magmatek'},
   {id:'metargel',              key:'metargel'},
-  {id:'mental_hackathon',      key:'hackathon'},
-  {id:'mental_staff_days',     key:'workshop'},
 ];
 const AUTHORITIES = [
   {name:"ירושלים", bootcamp:6, metargel:4, pulse:2, hackathon:2, workshop:2},
@@ -1072,9 +1068,10 @@ function renderHome(app){
     if(!name){ prev.innerHTML=''; return; }
     const lines = entitlementSummary(name);
     const auth = AUTHORITY_BY_NAME[name];
+    if(auth && auth.noModel){ prev.innerHTML = `<strong>סל המענים השנתי של ${escapeHtml(name)}:</strong><br><span style="display:inline-flex;margin-top:6px;background:#FDF3E3;color:#8A5A12;font-weight:700;padding:4px 12px;border-radius:999px;">לא במודל 1</span>`; return; }
     prev.innerHTML = `<strong>סל המענים השנתי של ${escapeHtml(name)}:</strong><br>` +
       lines.map(l=>'· '+escapeHtml(l)).join('<br>') +
-      (auth && auth.pulse ? `<div style="margin-top:10px;padding:8px 12px;border-radius:10px;background:#FDF3E3;color:#8A5A12;font-weight:600;line-height:1.5;">מתוך ${auth.bootcamp} הבוטקאמפים במכסה השנתית, ${auth.pulse} זמינים בפעימה הראשונה (לפי התקציב הקיים). השאר מתוכננים להמשך השנה, בכפוף להעברת התקציב.</div>` : '');
+      MENTAL_NOTE_HTML;
   };
   const search = document.getElementById('authoritySearch');
   const list = document.getElementById('authorityList');
@@ -1456,6 +1453,10 @@ async function commitSelectionsToPlan(){
 function quotaPanelHtml(school){
   const a = AUTHORITY_BY_NAME[school.name];
   if(!a) return '';
+  if(a.noModel) return `<div class="card" style="margin-bottom:18px;">
+    <p class="q-label" style="font-size:16px;">מכסת הרשות · ${escapeHtml(school.name)}</p>
+    <span style="display:inline-flex;background:#FDF3E3;color:#8A5A12;font-weight:700;padding:5px 14px;border-radius:999px;">לא במודל 1</span>
+  </div>`;
   const cells = ENTITLEMENT_ITEMS.map(e=>{
     const it = ITEMS.find(i=>i.id===e.id);
     if(!it) return '';
@@ -1466,15 +1467,17 @@ function quotaPanelHtml(school){
     return `<div style="display:flex;justify-content:space-between;gap:12px;align-items:baseline;padding:9px 0;border-bottom:1px solid var(--line);">
       <span style="font-size:13.5px;font-weight:600;">${escapeHtml(it.name)}</span>
       <span class="quota-badge ${u.full?'full':''}" style="margin:0;">${u.used} / ${u.max}</span>
-    </div>${e.id==='bootcamp_regular' && a.pulse ? pulseRowHtml(school, a.pulse) : ''}`;
+    </div>`;
   }).join('');
   if(!cells) return '';
   return `<div class="card" style="margin-bottom:18px;">
     <p class="q-label" style="font-size:16px;">מכסת הרשות · ${escapeHtml(school.name)}</p>
     <p class="q-hint">נספר על פני כל השכבות של הרשות יחד. המכסה מתעדכנת לפי החלפות שבוצעו.</p>
     <div>${cells}</div>
+    ${MENTAL_NOTE_HTML}
   </div>`;
 }
+const MENTAL_NOTE_HTML = `<div style="margin-top:14px;padding:12px 14px;border-radius:12px;background:var(--teal-dim);font-size:13.5px;line-height:1.6;"><strong>ציר מנטלי:</strong> כל רשות תבנה עם שותף הביצוע את סל המענים הרשותי בתחום המנטלי, בהתאם לצרכים מהשטח. האפשרויות המנטליות הן ימי עיון לצוותים, האקתון והרצאות להורים.</div>`;
 
 function pulseRowHtml(school, pulse){
   let ordered = 0;
@@ -1718,7 +1721,7 @@ function authStatsHtml(name){
     </div>
     <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:1fr;gap:12px;margin-top:14px;">${charts}${kpiHtml(name)}</div>
     <p style="margin:10px 0 0;font-size:12.5px;color:var(--slate);"><strong style="color:var(--ink);">בגרוטק</strong> – מספר זכאים לבגרות שנבחנו במתמטיקה 5 יח"ל אנגלית 5 יח"ל ומדעי המחשב 5 יח"ל או פיסיקה 5 יח"ל</p>
-    <p style="margin:4px 0 0;font-size:12.5px;color:var(--slate);"><strong style="color:var(--ink);">כמעט בגרוטק</strong> – זכאים לבגרות שנבחנו במתמטיקה ואנגלית ברמה של 5 יח"ל ולא נבחנו בפיסיקה ומדעי המחשב 5 יח"ל</p>
+    <p style="margin:4px 0 0;font-size:12.5px;color:var(--slate);"><strong style="color:var(--ink);">כמעט בגרוטק</strong> – מספר זכאים לבגרות שנבחנו במתמטיקה 4 יח"ל אנגלית 5 יח"ל ומדעי המחשב 5 יח"ל או פיזיקה 5 יח"ל</p>
     <p style="margin:4px 0 0;font-size:12.5px;color:var(--slate);"><strong style="color:var(--ink);">5-0</strong> – זכאים לבגרות שנבחנו במתמטיקה ואנגלית ברמה של 5 יח"ל ולא נבחנו בפיסיקה ומדעי המחשב 5 יח"ל</p>
     ${statNational ? '' : analysisHtml(name)}
     ${statNational ? '' : schoolTableHtml(name)}
@@ -1964,9 +1967,7 @@ function escapeAttr(str){ return escapeHtml(str); }
 
 /* ---------------- init ---------------- */
 document.getElementById('btnHome').addEventListener('click', ()=>{ view='home'; render(); });
-document.getElementById('btnExport').addEventListener('click', exportAllData);
-document.getElementById('btnImport').addEventListener('click', ()=> document.getElementById('importFileInput').click());
-document.getElementById('importFileInput').addEventListener('change', (e)=>{
+if(document.getElementById('importFileInput')) document.getElementById('importFileInput').addEventListener('change', (e)=>{
   const file = e.target.files && e.target.files[0];
   if(file) importAllDataFromFile(file);
   e.target.value = '';
