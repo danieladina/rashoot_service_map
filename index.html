@@ -1761,6 +1761,43 @@ document.addEventListener('click', e=>{
   const s = window.__activeSchool;
   if(box && s){ const open = [...box.querySelectorAll('details')].map(d=>d.open); box.outerHTML = authStatsHtml(s.name); document.querySelectorAll('.auth-stats details').forEach((d,i)=>{ if(open[i]) d.open = true; }); }
 });
+/* ---- קישור לקובץ של שי ---- */
+const SHAI_LINKS = {"ירושלים":"https://docs.google.com/spreadsheets/d/1QO4Sahny2QBk4nRcIoM42Fz4Xoby1tnPtNh-MB8_JwY/edit","תל אביב-יפו":"https://docs.google.com/spreadsheets/d/1Adog7XvxJcAxkvckcikaoo88wa8fyhuYq0XDoXc18gQ/edit","חיפה":"https://docs.google.com/spreadsheets/d/1niGSvLlZnEoGU9Qasl3Xn3XIhu5TVBKgDLkaAnPWY10/edit","חולון":"https://docs.google.com/spreadsheets/d/1b_gSANgT_1pmjjUPVbcvDpIQgG4J1XumnsYM-lEUKWY/edit","נתניה":"https://docs.google.com/spreadsheets/d/1yMzkFQ0V1odstWlR8Xsj2DVNqMtJOoMbUUO4Z4mZnTY/edit","רמת גן":"https://docs.google.com/spreadsheets/d/1R5LMCaGmrYfyh1nZz3VxDgmjiTiAQWgXwZ1pqKEQ4Eo/edit","ראשון לציון":"https://docs.google.com/spreadsheets/d/1VE4VxuOE0Y-CICA6ITL_AJWsP7egFJS5OCyjMixkOiA/edit","מודיעין מכבים רעות":"https://docs.google.com/spreadsheets/d/1sItNVqjdvs2vYSsJPAuf6AT_Luqhfw6Er18h9fd_DWM/edit","באר שבע":"https://docs.google.com/spreadsheets/d/1MS5ScfYRBGodUyx8jqote7NFlZ6O1OdOPb0J47vOKH8/edit","כפר סבא":"https://docs.google.com/spreadsheets/d/1Ofqjh2H1jF0RhEW9bjm4jEajvL6heSy2eOy7Vcc2LTQ/edit","אשדוד":"https://docs.google.com/spreadsheets/d/1YqER0TQY9PxlLrwY7RY-TRSKLVXCo7O9nEswFJtWoz4/edit","הרצליה":"https://docs.google.com/spreadsheets/d/1T_vX-bkqYeRPxGqCdviDIhSpZTzGgg51AhzUJVIksMA/edit","רעננה":"https://docs.google.com/spreadsheets/d/1MxxpRA9z5e1anJWTCxwuid-ZohBXxKQ1eHDrjjv1MAk/edit","רחובות":"https://docs.google.com/spreadsheets/d/1kWw0B_E5L79WkmItn26T6q-IEwN_h76ffwiSn9dVmwY/edit","מטה בנימין":"https://docs.google.com/spreadsheets/d/1VI0xE_2u0syImY15R1yAmbpq0OUBGTG8wYid2NP-NwY/edit","רמת השרון":"https://docs.google.com/spreadsheets/d/1CaFq_OSRlkYNXeQRLL6pLxZXzHZMqlXOgDNidyZ6tqc/edit","אשקלון":"https://docs.google.com/spreadsheets/d/14yB6b-9bq3Vkj4B7ZI9jEBIV3bfDpDQECPIgzYX19_U/edit","בית שמש":"https://docs.google.com/spreadsheets/d/12UxwS19w_8xRo9IFr_P4gWyq5kpbR01EvxyNegDCXTw/edit","גבעתיים":"https://docs.google.com/spreadsheets/d/1dsA4pJ6Ss3lBaI1hz6Wd3RcnE6pmjBkS2SFy9qtev2k/edit","הוד השרון":"https://docs.google.com/spreadsheets/d/16sB3KxRsw2UlP5QqFgUMGLJd9fsBOvw_gQAzp1qkieE/edit","לב השרון":"https://docs.google.com/spreadsheets/d/124gI7saxsX1Bb1vN7rPJ9FC18IEAKaoTgMpU9eHwpcQ/edit","עמק חפר":"https://docs.google.com/spreadsheets/d/1M4Mwd0C_NxCaue3kDc0T2f8wGDr_UDh9Ca3GDrwtW3Y/edit","עמק יזרעאל":"https://docs.google.com/spreadsheets/d/1C2M_inwZZ-43uuRGYwFu7mDpbKmUuauzipImJoc9hFU/edit","גוש עציון":"https://docs.google.com/spreadsheets/d/181YHng0r5AUx9cFb1ytmEd9JQtaETQz5fjRZq8jyvMs/edit","נס ציונה":"https://docs.google.com/spreadsheets/d/1Ig8zxV8CZBBKgyPB8bUyf1GYX6iQT-27E5ZxdXV9TV8/edit","בת ים":"https://docs.google.com/spreadsheets/d/1BuoIEWgBFAkDRai7D_MGs16e1uh5e6ZLhiurVK9PAd0/edit","גדרה":"https://docs.google.com/spreadsheets/d/1uCoz_loz96GI9pr1kTdzWaHeXA8DhwvHUjz_fHqh9gQ/edit","חדרה":"https://docs.google.com/spreadsheets/d/1aNYuZ1dyXhRtKCyJ6YVa4K0s__JnOWylO5YJ59i2eyk/edit","רהט":"https://docs.google.com/spreadsheets/d/1c4drGMUU2iCCh8jAiVDDAx3K2awhDWEEDirlPNXwcmY/edit","דרום השרון":"https://docs.google.com/spreadsheets/d/14YeBaMFvzeXlooY1GYxHGLsI8vz27FhVkBq-EYDUXIE/edit","אום אל-פחם":"https://docs.google.com/spreadsheets/d/1UF4_Ri6aLu7cifWVnGcrt113GnDdiytg5MUa4ejvG98/edit","מעלה אדומים":"https://docs.google.com/spreadsheets/d/1cQiYKMBxrRRQG-eYCXvHmjHJUE79FuKFAXVuUu11TSE/edit","רמלה":"https://docs.google.com/spreadsheets/d/1zto-hriBMoXd1blf3cH6mVxTM4pPeRVQo0h4xMgNanA/edit","יבנה":"https://docs.google.com/spreadsheets/d/1NTXDCiMC5wT1_RBnUf3exbfdmAR5zscFgxUfFQ1AMOM/edit","נצרת":"https://docs.google.com/spreadsheets/d/1fSVT0GbPKUnjRYJ12gExeXQV5gRdYOpnhn7pJ5bV69Y/edit","לוד":"https://docs.google.com/spreadsheets/d/1rRyrB056XlUrXlncP-8AHRoBKlHCcpM5gfvlwiKn1eo/edit","ראש העין":"https://docs.google.com/spreadsheets/d/1K4X5vK85mNtN6IOKg-kQZk2smr8UhrySJpQrxjkMql0/edit","גזר":"https://docs.google.com/spreadsheets/d/1j3tiqyKsOUPbBbYGMELgMGWoj7X6OdFkblzASOS3b1k/edit","שוהם":"https://docs.google.com/spreadsheets/d/13w-22bNcNA5XM1184wYVlD4RcZ5lCkZ9Ufnq1jypRVg/edit","זבולון":"https://docs.google.com/spreadsheets/d/1zRfWf6UcvdUq6qRj0bETS6QwCYpiUThDf-IH9PCzqyc/edit","יהוד נווה אפרים":"https://docs.google.com/spreadsheets/d/1msxjPg8iKOEjKp1wOEMe_mfVgELz7RbMsvAR6PmN-lA/edit","חוף הכרמל":"https://docs.google.com/spreadsheets/d/1XcEMl8FRsqgJgMGSKLgTVZc2ElOIgkKC0sQjCyLutxo/edit","קרית גת":"https://docs.google.com/spreadsheets/d/1UxXtUD0q8e3YuRLZ_ysialECs1TYQXxdFOyqLxDSSw8/edit","שפיר":"https://docs.google.com/spreadsheets/d/1LwjNeYyE_Myj8aRDHjSm_h_6DdB8w7wliGDMc6Y-Q4s/edit","קרית אונו":"https://docs.google.com/spreadsheets/d/1zuTxzetdtgw41xwLHhUnup95YOo5-ph_Tf-iikuLt28/edit","הגלבוע":"https://docs.google.com/spreadsheets/d/15mGRhCdU69RCWvRUai-AeCdSvSoc9SIe-2U0E9nQo24/edit","טבריה":"https://docs.google.com/spreadsheets/d/10vON6Z0ekZWPksFIWZ8AolXYVOZq0ka60PrCE9kA1Xs/edit","אילת":"https://docs.google.com/spreadsheets/d/1NYRlbGhRMNxgvpgfSB5EGayieCsfi9KJ9uHHJMScnQA/edit","מטה אשר":"https://docs.google.com/spreadsheets/d/1lguQVo0i86QabccHjxlZn89IFA2OpkTZQh1oh1gJdeo/edit","באקה אל-גרביה":"https://docs.google.com/spreadsheets/d/1pk5ZAPwE4F0QWyD3-71HCtl-PvBXXN7Kg6jpbBvFCSM/edit"};
+const normAuth = s => String(s||'').replace(/[\s\-־"׳״']/g,'');
+function shaiLinkFor(name){ if(SHAI_LINKS[name]) return SHAI_LINKS[name]; const n=normAuth(name); const k=Object.keys(SHAI_LINKS).find(k=>normAuth(k)===n); return k?SHAI_LINKS[k]:null; }
+function openShaiPin(url){
+  const ov=document.createElement('div');
+  ov.style.cssText='position:fixed;inset:0;background:rgba(7,10,89,.55);display:flex;align-items:center;justify-content:center;z-index:9999;';
+  ov.innerHTML=`<div style="background:#fff;border-radius:20px;padding:26px 28px;width:min(320px,90vw);text-align:center;box-shadow:0 20px 50px rgba(0,0,0,.3);direction:rtl;">
+    <div style="font-size:18px;font-weight:800;color:#070A59;margin-bottom:6px;">הזנת סיסמה</div>
+    <div style="font-size:13px;color:#5A5E73;margin-bottom:16px;">הזינו קוד בן 4 ספרות</div>
+    <div id="pinDots" style="display:flex;gap:12px;justify-content:center;direction:ltr;margin-bottom:10px;">${[0,1,2,3].map(()=>'<span style="width:16px;height:16px;border-radius:50%;border:2px solid #070A59;"></span>').join('')}</div>
+    <div id="pinErr" style="min-height:18px;font-size:13px;color:#C62828;margin-bottom:8px;"></div>
+    <div style="display:grid;grid-template-columns:repeat(3,64px);gap:10px;justify-content:center;direction:ltr;">
+      ${['1','2','3','4','5','6','7','8','9','','0','⌫'].map(k=>k?`<button data-k="${k}" style="height:56px;border-radius:50%;border:0;background:#EEF0F6;font-size:22px;font-weight:700;color:#070A59;cursor:pointer;font-family:inherit;">${k}</button>`:'<span></span>').join('')}
+    </div>
+    <button id="pinCancel" style="margin-top:16px;border:0;background:none;color:#5A5E73;font-size:14px;cursor:pointer;font-family:inherit;">ביטול</button>
+  </div>`;
+  document.body.appendChild(ov);
+  let pin='';
+  const dots=ov.querySelectorAll('#pinDots span'), err=ov.querySelector('#pinErr');
+  const close=()=>{ ov.remove(); document.removeEventListener('keydown',onKey); };
+  const paint=()=>dots.forEach((d,i)=>d.style.background=i<pin.length?'#070A59':'transparent');
+  const press=k=>{
+    if(k==='⌫'){ pin=pin.slice(0,-1); err.textContent=''; paint(); return; }
+    if(!/^\d$/.test(k)||pin.length>=4) return;
+    pin+=k; paint();
+    if(pin.length===4){
+      if(pin==='1231'){ close(); window.open(url,'_blank','noopener'); }
+      else { err.textContent='סיסמה שגויה'; setTimeout(()=>{ pin=''; paint(); },400); }
+    }
+  };
+  const onKey=e=>{ if(e.key==='Escape') close(); else if(e.key==='Backspace') press('⌫'); else if(/^\d$/.test(e.key)) press(e.key); };
+  document.addEventListener('keydown',onKey);
+  ov.querySelectorAll('[data-k]').forEach(b=>b.addEventListener('click',()=>press(b.dataset.k)));
+  ov.querySelector('#pinCancel').addEventListener('click',close);
+  ov.addEventListener('click',e=>{ if(e.target===ov) close(); });
+}
 /* ---------------- PLAN (per grade) ---------------- */
 function renderPlan(app){
   const school = window.__activeSchool;
@@ -1804,7 +1841,7 @@ function renderPlan(app){
     <div class="plan-toolbar no-print">
       <div class="school-meta">${plan.length} מענים בתוכנית</div>
       <div style="display:flex; gap:10px; flex-wrap:wrap;">
-        <button class="btn btn-ghost" id="addMoreBtn">הוסף מענים נוספים</button>
+        ${shaiLinkFor(school.name)?`<button class="btn btn-ghost" id="shaiLinkBtn">קישור לקובץ של שי</button>`:''}
         <button class="btn btn-teal" id="printBtn">הדפסה / ייצוא PDF</button>
         <button class="btn btn-danger-outline" id="deleteGradeBtn">מחיקת שכבה</button>
       </div>
@@ -1820,6 +1857,7 @@ function renderPlan(app){
   `;
 
   document.getElementById('backToSchoolBtn').addEventListener('click', ()=>{ currentSchoolId=null; view='home'; render(); });
+  document.getElementById('shaiLinkBtn')?.addEventListener('click', ()=> openShaiPin(shaiLinkFor(school.name)));
   document.getElementById('addMoreBtn')?.addEventListener('click', ()=>{
     window.__activeSchool = school;
     window.__activeGradeKey = gradeKey;
